@@ -1,13 +1,10 @@
 import * as config from 'config';
-import * as express from 'express';
-import { UserModel } from '../../data-layer/models/UserModel';
 import * as jwt from 'jsonwebtoken';
-import { logger } from '../../middleware/common/logging';
 
 
-let opts = {
+let opts = Object.assign({
   secretOrKey: config.get('auth.jwt_secret').toString()
-};
+});
 
 
 function createAuthToken(userId:string): string {

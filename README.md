@@ -90,7 +90,7 @@ without the use of the Docker bundle. To use this application as a separate stan
   from
 
   ```
-   //let connectionString =   config.get('mongo.urlClient').toString();
+   //let connectionString = config.get('mongo.urlClient').toString();
     let connectionString = config.get('mongo.urlDocker').toString();
   ```
 

@@ -8,7 +8,7 @@ import { logger } from './middleware/common/logging';
 
 import './service-layer/controllers/AuthorizationController';
 import './service-layer/controllers/UsersController';
-import {RegisterRoutes} from './middleware/server-config/routes';
+import { RegisterRoutes } from './middleware/server-config/routes';
 
 import * as methodOverride from 'method-override';
 import * as bodyParser from 'body-parser';
@@ -54,6 +54,7 @@ this.server = nodeFrameWork.app.listen(port, () => {
 
 const expressHost =  this.server.address();
 const expressPort =  this.server.address().port;
+  logger.info('expressHost', expressHost);
   logger.info(`
     ------------
     Server Started!

@@ -3,15 +3,9 @@ import * as express from 'express';
 import { AuthServiceCheck} from '../../data-layer/data-agents/UserDataAgent';
 import { IUserDocument } from '../../data-layer/data-abstracts/repositories/user/IUserDocument'
 import { verifyToken } from './token-helpers'
-import * as jwt from 'jsonwebtoken';
-import { logger } from '../../middleware/common/logging';
-import * as moment from 'moment';
 
 
 let authService = new AuthServiceCheck();
-let opts = {
-  secretOrKey: config.get('auth.jwt_secret').toString()
-};
 
 
 async function expressAuthentication(request: express.Request, securityName: string, scopes?: string[]): Promise<any> {

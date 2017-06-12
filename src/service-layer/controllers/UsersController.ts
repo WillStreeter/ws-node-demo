@@ -22,7 +22,6 @@ export class UsersController extends Controller{
     @Post()
     public async RegisterNewUser(@Body()  request: IUserCreateRequest): Promise<IUserResponse> {
        let vaildationErrors:any[] = await validateUserRegistration(request);
-       logger.info('RegisterNewUser  vaildationErrors =', vaildationErrors)
        if(vaildationErrors.length>0){
           throw {
                  thrown:true,
