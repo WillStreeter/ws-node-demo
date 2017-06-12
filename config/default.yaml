@@ -1,0 +1,15 @@
+express:
+    port: 8080
+    debug: 5858
+    host: ws-node-demo
+
+auth:
+    jwt_secret: 'UR4swimlane$'
+
+mongo:
+    urlClient: 'mongodb://127.0.0.1:27017/ws-demo'
+    urlDocker: 'mongodb://mongo:27017/ws-demo'
+
+
+# none/debug/info
+loglevel: info

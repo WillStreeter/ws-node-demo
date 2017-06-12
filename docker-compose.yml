@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  ws-node-demo:
+    restart: always
+    build:
+      context: ./.
+      dockerfile: ./Dockerfile.dev
+    image: local-ws-node-demo-dev:latest
+    command: ['npm', 'run', 'start:dev']
+    container_name: ws-node-demo-container
+    environment:
+        - loglevel=none
+    links:
+        - "mongo:mongo"
+    working_dir: "/usr/src/app"
+    volumes:
+        - "./.:/usr/src/app"
+        - "/usr/src/app/node_modules"
+    ports:
+        - "8080:8080"
+        - "5858:5858"
+  mongo:
+    image: mongo:3.2
+    volumes:
+    - ./mongo-data:/data/db
+    ports:
+        - "27017:27017"

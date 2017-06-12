@@ -1,0 +1,41 @@
+{
+    "swagger": {
+        "info": {
+            "description": "A Login authorization and registration using jwt",
+            "version": "1.0.0",
+            "title": "User Login Auth and Registration"
+        },
+        "tags":[
+            {
+                "name":"auth",
+                "description":"Access to updating a secured data"
+            },
+            {
+                "name":"user",
+                "description":"Operations about user"
+            }
+        ],
+        "schemes": [ "http", "https" ],
+        "securityDefinitions": {
+            "api_key": {
+                "type": "apiKey",
+                "name": "access_token",
+                "in": "header"
+            }
+        },
+        "outputDirectory": "./dist",
+        "entryFile": "./src/server.ts",
+        "host": "localhost:8080",
+        "basePath": "/api"
+    },
+
+    "routes": {
+        "basePath": "/api",
+        "entryFile": "./src/server.ts",
+        "routesDir": "./src/middleware/server-config",
+        "authenticationModule": "./src/business-layer/security/Authentication"
+    }
+}
+
+
+
