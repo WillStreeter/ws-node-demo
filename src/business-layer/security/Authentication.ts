@@ -15,9 +15,9 @@ let opts = {
 
 
 async function expressAuthentication(request: express.Request, securityName: string, scopes?: string[]): Promise<any> {
-    const token =  request.headers['x-access-token'];
+    const token:any =  request.headers['x-access-token'];
     if (token) {
-        const payload = verifyToken(token);
+       const payload = verifyToken(token);
        if(!(payload instanceof Error) ){
            let authResult = await authService.getAuthById(payload.userId);
            if(authResult && !(authResult instanceof Error)){

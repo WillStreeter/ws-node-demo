@@ -17,7 +17,7 @@ function createAuthToken(userId:string): string {
 };
 
 
-function verifyToken(token:string):any{
+function verifyToken(token:any):any{
     try {
       return  jwt.verify(token, opts.secretOrKey);
     } catch(err) {
