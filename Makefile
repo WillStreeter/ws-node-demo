@@ -15,7 +15,7 @@ build:
 	docker build -t  ws-node-demo -f  .
 
 build-dev:
-	docker build -t  ws-node-demo -f Dockerfile.dev .
+	docker build -t $(IMAGE_NAME) -f Dockerfile.dev .
 
 
 run-container:
