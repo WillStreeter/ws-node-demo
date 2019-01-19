@@ -1,5 +1,5 @@
+import * as Winston from 'winston';
 
-import * as winston from 'winston';
 import * as config from 'config';
 import * as expressWinston from 'express-winston';
 import { logger } from '../common/logging';
@@ -11,13 +11,14 @@ export function setupLogging(app) {
   // const env = server-config.util.getEnv('NODE_ENV');
 // error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
   if(level === 'info') {
-    logger.add(winston.transports.Console, {
-      type: 'debug',
-      colorize: true,
-      prettyPrint: true,
-      handleExceptions: true,
-      humanReadableUnhandledException: true
-    });
+    logger.add(new Winston.transports.Console({
+        level: 'debug',
+        format: Winston.format.combine(
+               Winston.format.colorize(),
+               Winston.format.prettyPrint(),
+        ),
+        handleExceptions: true,
+    }))
   }
 
   setupExpress(app);
@@ -27,13 +28,15 @@ export function setupLogging(app) {
 
 
 function setupExpress(app) {
-  // error logging
+  // error loggin
   if(level === 'debug') {
     app.use(expressWinston.errorLogger({
       transports: [
-        new winston.transports.Console({
-          json: true,
-          colorize: true
+        new Winston.transports.Console({
+          format: Winston.format.combine(
+                    Winston.format.colorize(),
+                    Winston.format.json()
+                  )
         })
       ]
     }));
@@ -43,9 +46,11 @@ function setupExpress(app) {
   if(level === 'info') {
     app.use(expressWinston.logger({
       transports: [
-        new winston.transports.Console({
-          json: true,
-          colorize: true
+        new Winston.transports.Console({
+          format: Winston.format.combine(
+                    Winston.format.colorize(),
+                    Winston.format.json()
+                  )
         })
       ]
     }));

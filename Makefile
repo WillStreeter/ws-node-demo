@@ -15,7 +15,7 @@ build:
 	docker build -t  ws-node-demo -f  .
 
 build-dev:
-	docker build -t  ws-node-demo -f Dockerfile.dev .
+	docker build -t $(IMAGE_NAME) -f Dockerfile.dev .
 
 
 run-container:
@@ -26,6 +26,10 @@ start:
 
 stop:
 	docker stop $(CONTAINER_NAME)
+
+
+flush:
+	docker stop $(CONTAINER_NAME) && docker rm $(CONTAINER_NAME)
 
 rm:
 	docker rm $(CONTAINER_NAME)

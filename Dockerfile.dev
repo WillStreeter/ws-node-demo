@@ -1,8 +1,7 @@
-FROM willsonic/ws-node-alpine:v1.0.0
+FROM willsonic/ws-node-alpine:v10.15.0
 
 ENV PATH $PATH:/usr/lib/node_modules/bin
 
-RUN npm i -g  nodemon node-inspector npm-run-all rimraf
 
 RUN mkdir -p /usr/src/app
 

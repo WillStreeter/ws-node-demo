@@ -1,7 +1,7 @@
 
 import { MongooseAccess } from '../../../adapters/MongooseAccess';
 import { Schema } from "mongoose";
-import * as Bcrypt from "bcrypt-nodejs";
+import * as Bcrypt from "bcrypt-nodejs"
 import { IUserDocument} from './IUserDocument';
 
 
@@ -14,7 +14,7 @@ const SALT_WORK_FACTOR = 10;
  * @type {"mongoose".Schema}
  * @private
  */
-let UserSchema:Schema = new MongooseAccess.mongooseInstance.Schema({
+let UserSchema:Schema = new Schema({
   username:  {
                 type: String,
                   trim: true,
@@ -61,8 +61,8 @@ let UserSchema:Schema = new MongooseAccess.mongooseInstance.Schema({
 
 
 UserSchema.pre("save", function (next : any) {
-      if (this._doc) {
-        let doc = <IUserDocument>this._doc;
+      if (this) {
+        let doc = <IUserDocument>this;
         let now = new Date();
 
         if (!doc.createdAt) {
