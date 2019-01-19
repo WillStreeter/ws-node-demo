@@ -1,6 +1,6 @@
-import * as winston from 'winston';
+import * as Winston from 'winston';
 
-export const logger = new winston.Logger();
+export const logger = Winston.createLogger()
 
 process.on('unhandledRejection', function (reason, p) {
   logger.warn('Possibly Unhandled Rejection at: Promise ', p, ' reason: ', reason);

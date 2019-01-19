@@ -27,6 +27,10 @@ start:
 stop:
 	docker stop $(CONTAINER_NAME)
 
+
+flush:
+	docker stop $(CONTAINER_NAME) && docker rm $(CONTAINER_NAME)
+
 rm:
 	docker rm $(CONTAINER_NAME)
 

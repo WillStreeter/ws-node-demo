@@ -1,8 +1,9 @@
 /* tslint:disable */
-import { Controller, ValidateParam, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
+import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { AuthorizationsController } from './../../service-layer/controllers/AuthorizationController';
 import { UsersController } from './../../service-layer/controllers/UsersController';
 import { expressAuthentication } from './../../business-layer/security/Authentication';
+import * as express from 'express';
 
 const models: TsoaRoute.Models = {
     "IUserResponse": {
@@ -52,8 +53,9 @@ const models: TsoaRoute.Models = {
         },
     },
 };
+const validationService = new ValidationService(models);
 
-export function RegisterRoutes(app: any) {
+export function RegisterRoutes(app: express.Express) {
     app.post('/api/Authorizations/Login',
         function(request: any, response: any, next: any) {
             const args = {
@@ -70,7 +72,7 @@ export function RegisterRoutes(app: any) {
             const controller = new AuthorizationsController();
 
 
-            const promise = controller.login.apply(controller, validatedArgs);
+            const promise = controller.login.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     app.post('/api/Authorizations/Logout',
@@ -89,7 +91,7 @@ export function RegisterRoutes(app: any) {
             const controller = new AuthorizationsController();
 
 
-            const promise = controller.logout.apply(controller, validatedArgs);
+            const promise = controller.logout.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     app.post('/api/Users',
@@ -108,11 +110,11 @@ export function RegisterRoutes(app: any) {
             const controller = new UsersController();
 
 
-            const promise = controller.RegisterNewUser.apply(controller, validatedArgs);
+            const promise = controller.RegisterNewUser.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     app.get('/api/Users/:userId',
-        authenticateMiddleware([{ "name": "api_key" }]),
+        authenticateMiddleware([{ "api_key": [] }]),
         function(request: any, response: any, next: any) {
             const args = {
                 userId: { "in": "path", "name": "userId", "required": true, "dataType": "string" },
@@ -129,7 +131,7 @@ export function RegisterRoutes(app: any) {
             const controller = new UsersController();
 
 
-            const promise = controller.GetUserById.apply(controller, validatedArgs);
+            const promise = controller.GetUserById.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     app.get('/api/Users/username/:username',
@@ -148,7 +150,7 @@ export function RegisterRoutes(app: any) {
             const controller = new UsersController();
 
 
-            const promise = controller.GetUserByUsername.apply(controller, validatedArgs);
+            const promise = controller.GetUserByUsername.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     app.patch('/api/Users',
@@ -167,31 +169,50 @@ export function RegisterRoutes(app: any) {
             const controller = new UsersController();
 
 
-            const promise = controller.Update.apply(controller, validatedArgs);
+            const promise = controller.Update.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
 
     function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
-        return (request: any, response: any, next: any) => {
+        return (request: any, _response: any, next: any) => {
             let responded = 0;
             let success = false;
+
+            const succeed = function(user: any) {
+                if (!success) {
+                    success = true;
+                    responded++;
+                    request['user'] = user;
+                    next();
+                }
+            }
+
+            const fail = function(error: any) {
+                responded++;
+                if (responded == security.length && !success) {
+                    error.status = 401;
+                    next(error)
+                }
+            }
+
             for (const secMethod of security) {
-                expressAuthentication(request, secMethod.name, secMethod.scopes).then((user: any) => {
-                    // only need to respond once
-                    if (!success) {
-                        success = true;
-                        responded++;
-                        request['user'] = user;
-                        next();
+                if (Object.keys(secMethod).length > 1) {
+                    let promises: Promise<any>[] = [];
+
+                    for (const name in secMethod) {
+                        promises.push(expressAuthentication(request, name, secMethod[name]));
                     }
-                })
-                    .catch((error: any) => {
-                        responded++;
-                        if (responded == security.length && !success) {
-                            response.status(401);
-                            next(error)
-                        }
-                    })
+
+                    Promise.all(promises)
+                        .then((users) => { succeed(users[0]); })
+                        .catch(fail);
+                } else {
+                    for (const name in secMethod) {
+                        expressAuthentication(request, name, secMethod[name])
+                            .then(succeed)
+                            .catch(fail);
+                    }
+                }
             }
         }
     }
@@ -230,15 +251,15 @@ export function RegisterRoutes(app: any) {
                 case 'request':
                     return request;
                 case 'query':
-                    return ValidateParam(args[key], request.query[name], models, name, fieldErrors);
+                    return validationService.ValidateParam(args[key], request.query[name], name, fieldErrors);
                 case 'path':
-                    return ValidateParam(args[key], request.params[name], models, name, fieldErrors);
+                    return validationService.ValidateParam(args[key], request.params[name], name, fieldErrors);
                 case 'header':
-                    return ValidateParam(args[key], request.header(name), models, name, fieldErrors);
+                    return validationService.ValidateParam(args[key], request.header(name), name, fieldErrors);
                 case 'body':
-                    return ValidateParam(args[key], request.body, models, name, fieldErrors, name + '.');
+                    return validationService.ValidateParam(args[key], request.body, name, fieldErrors, name + '.');
                 case 'body-prop':
-                    return ValidateParam(args[key], request.body[name], models, name, fieldErrors, 'body.');
+                    return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, 'body.');
             }
         });
         if (Object.keys(fieldErrors).length > 0) {
