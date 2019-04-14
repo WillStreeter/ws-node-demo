@@ -44,6 +44,12 @@ let UserSchema:Schema = new Schema({
 
   admin:      Boolean,
 
+  animals: [ {
+        type: Schema.Types.ObjectId,
+        ref: 'animal',
+        required: true,
+        } ],
+
   isLoggedIn: Boolean,
 
   createdAt: {

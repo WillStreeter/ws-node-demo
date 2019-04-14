@@ -1,5 +1,5 @@
 import {IUserDocument} from '../data-abstracts/repositories/user/IUserDocument';
-
+import { IAnimalResponse} from '../../service-layer/responses/IAnimalResponse';
 
 export class UserModel {
 
@@ -36,10 +36,14 @@ export class UserModel {
     return this._useModel.email;
   }
 
+  get  animals():IAnimalResponse[]{
+    return this._useModel.animals;
+  }
 
   get admin(): boolean {
     return this._useModel.admin;
   }
+
 
   get isLoggedIn(): boolean {
     return this._useModel.isLoggedIn;
@@ -62,7 +66,8 @@ export class UserModel {
                               username: this._useModel.username,
                               firstname: this._useModel.firstname,
                               lastname: this._useModel.lastname,
-                              email: this._useModel.email
+                              email: this._useModel.email,
+                              animals: this._useModel.animals
                         })
   }
 
@@ -75,6 +80,7 @@ export class UserModel {
                               lastname: this._useModel.lastname,
                               email: this._useModel.email,
                               admin: this._useModel.admin,
+                              animals: this._useModel.animals,
                               isLoggedIn: this._useModel.isLoggedIn,
                               createdAt: this._useModel.createdAt,
                               modifiedAt: this._useModel.modifiedAt

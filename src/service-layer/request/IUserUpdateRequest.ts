@@ -5,4 +5,5 @@ export interface IUserUpdateRequest{
   lastname?: string;
   email?: string;
   admin?: boolean;
+  animals?:string[]
 }

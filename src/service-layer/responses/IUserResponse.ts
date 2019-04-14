@@ -1,3 +1,4 @@
+import {IAnimalResponse} from './IAnimalResponse';
 
 export interface IUserResponse{
   id?:string;
@@ -5,4 +6,5 @@ export interface IUserResponse{
   firstname?: string;
   lastname?: string;
   email?: string;
+  animals?: IAnimalResponse[]
 }

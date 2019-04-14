@@ -11,6 +11,10 @@
                 "description":"Access to updating a secured data"
             },
             {
+                "name":"animal",
+                "description":"operations about animal"
+            },
+            {
                 "name":"user",
                 "description":"Operations about user"
             }

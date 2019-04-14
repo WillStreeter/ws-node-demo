@@ -2,10 +2,17 @@
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute } from 'tsoa';
 import { AuthorizationsController } from './../../service-layer/controllers/AuthorizationController';
 import { UsersController } from './../../service-layer/controllers/UsersController';
+import { AnimalController } from './../../service-layer/controllers/AnimalController';
 import { expressAuthentication } from './../../business-layer/security/Authentication';
 import * as express from 'express';
 
 const models: TsoaRoute.Models = {
+    "IAnimalResponse": {
+        "properties": {
+            "id": { "dataType": "string" },
+            "specie": { "dataType": "string" },
+        },
+    },
     "IUserResponse": {
         "properties": {
             "id": { "dataType": "string" },
@@ -13,6 +20,7 @@ const models: TsoaRoute.Models = {
             "firstname": { "dataType": "string" },
             "lastname": { "dataType": "string" },
             "email": { "dataType": "string" },
+            "animals": { "dataType": "array", "array": { "ref": "IAnimalResponse" } },
         },
     },
     "IUserLoginRequest": {
@@ -50,6 +58,12 @@ const models: TsoaRoute.Models = {
             "lastname": { "dataType": "string" },
             "email": { "dataType": "string" },
             "admin": { "dataType": "boolean" },
+            "animals": { "dataType": "array", "array": { "dataType": "string" } },
+        },
+    },
+    "IAnimalCreateRequest": {
+        "properties": {
+            "specie": { "dataType": "string", "required": true },
         },
     },
 };
@@ -170,6 +184,25 @@ export function RegisterRoutes(app: express.Express) {
 
 
             const promise = controller.Update.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/api/Animals',
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "body", "name": "request", "required": true, "ref": "IAnimalCreateRequest" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new AnimalController();
+
+
+            const promise = controller.RegisterNewAnimal.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
 

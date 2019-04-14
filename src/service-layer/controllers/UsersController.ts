@@ -73,6 +73,7 @@ export class UsersController extends Controller{
         let result = await this.userDataAgent.getByUsername(username)
         if( result && result.username){
                var aUser = new UserModel(result);
+
                return <IUserResponse>( {user:aUser.getClientUserModel()});
         }else{
               throw result;

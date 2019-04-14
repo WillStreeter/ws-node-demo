@@ -44,7 +44,9 @@ export class UserDataAgent{
 
 
   async getByUsername(userName:string):Promise<any> {
-      let authUser =  await UserRepo.findOne({ username : userName});
+      let authUser =  await UserRepo.findOne({ username : userName})
+        .populate('animals')
+        .populate('animals.animal.meals.meal');
 
       if(!authUser){
             return  {thrown:true, status:404,  message: "username does not exit"};
@@ -57,7 +59,9 @@ export class UserDataAgent{
       if(! objectId.isValid(userId)){
             return  {status:401,  message: "incorrect user id"};
       }
-      let result = await UserRepo.findById(userId);
+      let result = await UserRepo.findById(userId)
+        .populate('animals')
+        .populate('animals.animal.meals.meal');
       return result;
   }
 
@@ -68,11 +72,18 @@ export class UserDataAgent{
       if(! objectId.isValid(userProfile.id)){
             return  {thrown:true, status:401,  message: "incorrect user id"};
       }
+      console.log('-------updateUser user = ', userProfile)
       let resultUserById = await UserRepo.findById(userProfile.id);
-      if(resultUserById){
+      if(!resultUserById){
          return  {thrown:true, status:409,  message: "this user does not exist"};
       }
-      let savedResult = await userProfile.save();
+      resultUserById.username = userProfile.username;
+      if(userProfile.animals){
+
+           resultUserById.animals = userProfile.animals;
+      }
+      console.log('-------updateUser resultUserById = ', userProfile)
+      let savedResult = await resultUserById.save();
       if(savedResult.errors){
           return  {status:422,  message: "db is currently unable to process request"};
       }
