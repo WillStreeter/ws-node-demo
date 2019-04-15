@@ -2,11 +2,11 @@ import { Document, Types } from 'mongoose';
 import {IMealDocument} from '../meal';
 
 
-export interface IAnimalDocument extends mongoose.Document {
+export interface IAnimalDocument extends Document {
 
   id: string;
   specie: string;
-  meals?: Types.DocumentArray<IMealDocument>
+  meals?: Types.DocumentArray<IMealDocument>;
   createdAt: Date;
   modifiedAt: Date;
 }

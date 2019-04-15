@@ -16,7 +16,7 @@ export class AnimalModel {
   get specie(): string {
     return this._animalModel.specie;
   }
-  get meals(): IMealResponse {
+  get meals(): IMealResponse[] {
     return this._animalModel.meals;
   }
   get createdAt(): Date {

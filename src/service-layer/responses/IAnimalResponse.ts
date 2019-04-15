@@ -1,7 +1,7 @@
-import {IMealDocument} from '../../data-layer/data-abstracts/repositories/meal';
+import {IMealResponse} from './IMealResponse';
 
 export interface IAnimalResponse{
   id?:string;
   specie?: string;
-  meals?: IMealDocument[]
+  meals?: IMealResponse[]
 }

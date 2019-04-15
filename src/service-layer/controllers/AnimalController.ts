@@ -7,6 +7,7 @@ import { AnimalModel } from '../../data-layer/models/AnimalModel';
 
 import { logger } from '../../middleware/common/logging';
 import {UserModel} from '../../data-layer/models/UserModel';
+import {IAnimalUpdateRequest} from '../request/IAnimalUpdateRequest';
 
 
 @Route('Animals')
@@ -26,7 +27,7 @@ export class AnimalController extends Controller{
 
 
     @Put()
-    public async Update(@Body() request: IAnimalCreateRequest ): Promise<IAnimalResponse> {
+    public async Update(@Body() request: IAnimalUpdateRequest ): Promise<IAnimalResponse> {
         let result = await this.animalDataAgent.updateAnimal(request);
         if(result.id){
                return <IAnimalResponse>(result);

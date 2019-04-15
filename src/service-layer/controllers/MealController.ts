@@ -1,25 +1,24 @@
-import { Route, Response, Get, Post, Put, Header, Body, Security, Controller, Path } from 'tsoa';
-import {IAnimalCreateRequest, IUserUpdateRequest} from '../request/index';
-import {IMessageResponse, IAnimalResponse} from '../responses/index';
+import { Route, Post, Put, Header, Body, Controller, Path } from 'tsoa';
+import { IMealCreateRequest } from '../request/index';
+import {IMealResponse} from '../responses/index';
 
-import { AnimalDataAgent } from '../../data-layer/data-agents/AnimalDataAgent';
-import { AnimalModel } from '../../data-layer/models/AnimalModel';
+import { MealDataAgent } from '../../data-layer/data-agents/MealDataAgent';
 
 import { logger } from '../../middleware/common/logging';
-import {UserModel} from '../../data-layer/models/UserModel';
 
 
-@Route('Animals')
-export class AnimalController extends Controller{
-    animalDataAgent:AnimalDataAgent = new AnimalDataAgent();
+@Route('Meals')
+export class MealController extends Controller{
+    mealDataAgent:MealDataAgent = new MealDataAgent();
     @Post()
-    public async RegisterNewAnimal(@Body()  request: IAnimalCreateRequest): Promise<IAnimalResponse> {
-       let result = await this.animalDataAgent.createNewAnimal(request);
+    public async RegisterNewMeal(@Body()  request: IMealCreateRequest): Promise<IMealResponse> {
+       let result = await this.mealDataAgent.createNewMeal(request);
        if(result.id){
-        return <IAnimalResponse>(result);
+        return <IMealResponse>(result);
        }else{
 
           throw result;
 
        }
     }
+}

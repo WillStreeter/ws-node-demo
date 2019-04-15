@@ -13,6 +13,11 @@ import { IAnimalDocument } from './IAnimalDocument';
         type: String,
   },
 
+  meals: [ {
+        type: Schema.Types.ObjectId,
+        ref: 'meal',
+        } ],
+
   createdAt: {
 	   type: Date,
 	   default : Date.now()

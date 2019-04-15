@@ -47,11 +47,14 @@ export class AnimalDataAgent{
       if(! objectId.isValid(animal.id)){
             return  {thrown:true, status:401,  message: "incorrect animal id"};
       }
+      console.log('updateAnimal ---  animal --- ', animal)
       let resultAnimalById = await AnimalRepo.findById(animal.id);
-      if(resultAnimalById){
+      console.log('updateAnimal ---  resultAnimalById --- ', resultAnimalById)
+      if(!resultAnimalById){
          return  {thrown:true, status:409,  message: "this animal does not exist"};
       }
-      let savedResult = await animal.save();
+      resultAnimalById.meals = animal.meals;
+      let savedResult = await resultAnimalById.save();
       if(savedResult.errors){
           return  {status:422,  message: "db is currently unable to process request"};
       }

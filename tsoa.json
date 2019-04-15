@@ -15,6 +15,10 @@
                 "description":"operations about animal"
             },
             {
+                "name":"meal",
+                "description":"meals eaten by  animals"
+            },
+            {
                 "name":"user",
                 "description":"Operations about user"
             }

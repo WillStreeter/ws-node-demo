@@ -1,7 +1,6 @@
-import mongoose = require('mongoose');
+import { Document, Types } from 'mongoose';
 
-export interface IMealDocument extends mongoose.Document {
-
+export interface IMealDocument extends Document {
   id: string;
   food: string;
   createdAt: Date;

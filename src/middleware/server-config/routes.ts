@@ -3,14 +3,22 @@ import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute } 
 import { AuthorizationsController } from './../../service-layer/controllers/AuthorizationController';
 import { UsersController } from './../../service-layer/controllers/UsersController';
 import { AnimalController } from './../../service-layer/controllers/AnimalController';
+import { MealController } from './../../service-layer/controllers/MealController';
 import { expressAuthentication } from './../../business-layer/security/Authentication';
 import * as express from 'express';
 
 const models: TsoaRoute.Models = {
+    "IMealResponse": {
+        "properties": {
+            "id": { "dataType": "string" },
+            "food": { "dataType": "string" },
+        },
+    },
     "IAnimalResponse": {
         "properties": {
             "id": { "dataType": "string" },
             "specie": { "dataType": "string" },
+            "meals": { "dataType": "array", "array": { "ref": "IMealResponse" } },
         },
     },
     "IUserResponse": {
@@ -64,6 +72,12 @@ const models: TsoaRoute.Models = {
     "IAnimalCreateRequest": {
         "properties": {
             "specie": { "dataType": "string", "required": true },
+            "meals": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
+        },
+    },
+    "IMealCreateRequest": {
+        "properties": {
+            "food": { "dataType": "string", "required": true },
         },
     },
 };
@@ -203,6 +217,44 @@ export function RegisterRoutes(app: express.Express) {
 
 
             const promise = controller.RegisterNewAnimal.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.put('/api/Animals',
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "body", "name": "request", "required": true, "ref": "IAnimalCreateRequest" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new AnimalController();
+
+
+            const promise = controller.Update.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    app.post('/api/Meals',
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "body", "name": "request", "required": true, "ref": "IMealCreateRequest" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new MealController();
+
+
+            const promise = controller.RegisterNewMeal.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
 

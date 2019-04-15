@@ -1,14 +1,9 @@
-
 import mongoose = require('mongoose');
 import { UserRepo, UserSchema, IUserDocument} from '../data-abstracts/repositories/user/index';
 import { logger } from '../../middleware/common/logging';
 
-
 export class UserDataAgent{
-
-
   async createNewUser(user:any):Promise<any> {
-
       let newUser = <IUserDocument>(user);
       let previouseUser =  await UserRepo.findOne({ username : newUser.username});
       if(previouseUser){
@@ -45,8 +40,7 @@ export class UserDataAgent{
 
   async getByUsername(userName:string):Promise<any> {
       let authUser =  await UserRepo.findOne({ username : userName})
-        .populate('animals')
-        .populate('animals.animal.meals.meal');
+        .populate({path:'animals', populate:{ path:'meals'}});
 
       if(!authUser){
             return  {thrown:true, status:404,  message: "username does not exit"};
@@ -61,7 +55,7 @@ export class UserDataAgent{
       }
       let result = await UserRepo.findById(userId)
         .populate('animals')
-        .populate('animals.animal.meals.meal');
+        .populate({path:'animals', populate:{ path:'meals'}});
       return result;
   }
 
