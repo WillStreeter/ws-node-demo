@@ -4,6 +4,7 @@ import { AuthorizationsController } from './../../service-layer/controllers/Auth
 import { UsersController } from './../../service-layer/controllers/UsersController';
 import { AnimalController } from './../../service-layer/controllers/AnimalController';
 import { MealController } from './../../service-layer/controllers/MealController';
+import { ProfileController } from './../../service-layer/controllers/ProfileController';
 import { expressAuthentication } from './../../business-layer/security/Authentication';
 import * as express from 'express';
 
@@ -75,9 +76,29 @@ const models: TsoaRoute.Models = {
             "meals": { "dataType": "array", "array": { "dataType": "string" }, "required": true },
         },
     },
+    "IAnimalUpdateRequest": {
+        "properties": {
+            "id": { "dataType": "string", "required": true },
+            "specie": { "dataType": "string" },
+            "meals": { "dataType": "array", "array": { "dataType": "string" } },
+        },
+    },
     "IMealCreateRequest": {
         "properties": {
             "food": { "dataType": "string", "required": true },
+        },
+    },
+    "IProfileResponse": {
+        "properties": {
+            "id": { "dataType": "string" },
+            "zooKeeper": { "dataType": "boolean" },
+            "user": { "ref": "IUserResponse" },
+        },
+    },
+    "IProfileCreateRequest": {
+        "properties": {
+            "zooKeeper": { "dataType": "boolean", "required": true },
+            "user": { "dataType": "string", "required": true },
         },
     },
 };
@@ -222,7 +243,7 @@ export function RegisterRoutes(app: express.Express) {
     app.put('/api/Animals',
         function(request: any, response: any, next: any) {
             const args = {
-                request: { "in": "body", "name": "request", "required": true, "ref": "IAnimalCreateRequest" },
+                request: { "in": "body", "name": "request", "required": true, "ref": "IAnimalUpdateRequest" },
             };
 
             let validatedArgs: any[] = [];
@@ -257,7 +278,44 @@ export function RegisterRoutes(app: express.Express) {
             const promise = controller.RegisterNewMeal.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
+    app.post('/api/Profile',
+        function(request: any, response: any, next: any) {
+            const args = {
+                request: { "in": "body", "name": "request", "required": true, "ref": "IProfileCreateRequest" },
+            };
 
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ProfileController();
+
+
+            const promise = controller.RegisterNewProfile.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+app.get('/api/Profile/:profileId',
+        function(request: any, response: any, next: any) {
+            const args = {
+                profileId: { "in": "path", "name": "profileId", "required": true, "dataType": "string" },
+            };
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ProfileController();
+
+
+            const promise = controller.GetProfileById.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
     function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
         return (request: any, _response: any, next: any) => {
             let responded = 0;

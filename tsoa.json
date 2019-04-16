@@ -21,6 +21,10 @@
             {
                 "name":"user",
                 "description":"Operations about user"
+            },
+            {
+                "name":"profile",
+                "description":"Operations about profile"
             }
         ],
         "schemes": [ "http", "https" ],

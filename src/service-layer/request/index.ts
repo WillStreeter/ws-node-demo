@@ -3,3 +3,4 @@ export { IUserUpdateRequest } from './IUserUpdateRequest';
 export { IUserLoginRequest }  from './IUserLoginRequest';
 export { IAnimalCreateRequest }  from './IAnimalCreateRequest';
 export { IMealCreateRequest }  from './IMealCreateRequest';
+export { IProfileCreateRequest }  from './IProfileCreateRequest';

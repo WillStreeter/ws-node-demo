@@ -42,7 +42,7 @@ let UserSchema:Schema = new Schema({
                required: true,
              },
 
-  admin:      Boolean,
+  admin:Boolean,
 
   animals: [ {
         type: Schema.Types.ObjectId,

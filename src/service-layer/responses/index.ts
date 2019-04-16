@@ -3,3 +3,4 @@ export { IAnimalResponse } from './IAnimalResponse';
 export { IMealResponse } from './IMealResponse';
 export { IErrorResponse }  from './IErrorResponse';
 export { IMessageResponse }  from './IMessageResponse';
+export { IProfileResponse }  from './IProfileResponse';
